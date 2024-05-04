@@ -36,15 +36,11 @@ FROM sakila.rentals_may m
 LEFT JOIN sakila.rentals_june j
   ON m.customer_id = j.customer_id;
   
-select * from sakila.joined_rentals;
-
-CREATE TEMPORARY TABLE sakila.count_joined_rentals as
-select customer_id, count(rental_id_may) as rentals_may , count(rental_id_may) as rentals_june,
+select customer_id,count(rental_id_may) as rentals_may , count(rental_id_may) as rentals_june, 
 case
-	when count(rentals_june) > count(rentals_may) then 'borrowed_more_in_june'
-    when count(rentals_june) < count(rentals_may) then 'borrowed_less_in_june'
-    when count(rentals_june) = count(rentals_may) then 'borrowed_same_in_june'
-end as rentals_difference
+	when count(rental_id_june) > count(rental_id_may) then 'borrowed_more_in_june'
+    when count(rental_id_june) < count(rental_id_may) then 'borrowed_less_in_june'
+    when count(rental_id_june) = count(rental_id_may) then 'borrowed_same_in_june'
+end as rentals_difference 
 from sakila.joined_rentals
-group by customer_id
-order by count(rentals_difference) desc;
+group by customer_id;
